@@ -1,0 +1,98 @@
+{% extends 'pagina/base.html' %}
+
+{% block title %} 
+<title>Séries - DrakeMovies</title> 
+{% endblock %}
+
+{% block content %}
+ <h1>Séries Populares</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  {% if mensagem %}
+    <p>{{ mensagem }}</p>
+  {% endif %}
+
+  {% if lista_series %}
+    <div class="row g-4">
+      {% for serie in lista_series %}
+        <div class="col-6 col-md-4 col-lg-3">
+          <a
+            href="{% url 'trailer' movie_id=serie.id %}"
+            class="d-block h-100 text-decoration-none text-reset"
+            aria-label="Assistir ao trailer de {{ serie.title }}"
+          >
+          <article class="film-card h-100">
+            {% if serie.poster_path %}
+              <img
+                src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}"
+                alt="Pôster de {{ serie.title }}"
+                class="card-img-top"
+                loading="lazy"
+                style="aspect-ratio: 2 / 3; object-fit: cover;"
+              >
+            {% else %}
+              <div class="film-thumb d-flex align-items-center justify-content-center text-white-50">
+                Pôster indisponível
+              </div>
+            {% endif %}
+            <div class="film-body">
+              <h2 class="h5">{{ serie.title }}</h2>
+              {% if serie.vote_average %}
+                <p class="mb-0">Nota: {{ serie.vote_average|floatformat:1 }}/10</p>
+              {% endif %}
+            </div>
+          </article>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% elif not mensagem %}
+    <p>Nenhuma série encontrada.</p>
+  {% endif %}
+
+  {% if pagina_atual > 1 or lista_series|length == 20 %}
+    <nav class="mt-5" aria-label="Navegação de páginas">
+      <ul class="pagination justify-content-center gap-2">
+        {% if pagina_atual > 1 %}
+          <li class="page-item">
+            <a class="page-link rounded-pill px-4" href="?page={{ pagina_atual|add:'-1' }}" aria-label="Ir para a página anterior">
+              <i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Anterior
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link rounded-pill px-4" aria-disabled="true">
+              <i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Anterior
+            </span>
+          </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+          <span class="page-link rounded-pill px-4" aria-current="page">
+            Página {{ pagina_atual }}
+          </span>
+        </li>
+
+        {% if lista_filmes|length == 20 %}
+          <li class="page-item">
+            <a class="page-link rounded-pill px-4" href="?page={{ pagina_atual|add:'1' }}" aria-label="Ir para a próxima página">
+              Próxima<i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link rounded-pill px-4" aria-disabled="true">
+              Próxima<i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+            </span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+
+{% endblock %}

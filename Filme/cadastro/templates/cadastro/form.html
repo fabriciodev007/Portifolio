@@ -1,0 +1,28 @@
+{% extends 'pagina/base.html' %}
+
+
+{% block content %}
+<main class="container py-5">
+    <section class="card signup-card auth-card mx-auto">
+        <div class="card-body">
+            <h1 class="h3 text-center text-white mb-4">Cadastro</h1>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+                {% endfor %}
+                <button class="btn btn-primary w-100" type="submit">Cadastrar</button>
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock %}
