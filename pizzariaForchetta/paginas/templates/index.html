@@ -1,0 +1,75 @@
+{% extends 'modelo.html' %}
+{% load static %}
+{% block estilo %}
+  <link rel="stylesheet" href=" {% static 'css/estilo.css' %}" />
+{% endblock %}
+{% block linkshead %}
+  <title>Pizzaria Palestra - Início</title>
+{% endblock %}
+
+{% block conteudo %}
+  <section class="home-hero-section py-5 mb-5 rounded-4 shadow-sm">
+    <div class="container py-5">
+      <div class="row align-items-center g-4">
+        <div class="col-md-6">
+          <span class="badge bg-warning text-dark mb-3">Especial de hoje</span>
+          <h1 class="display-5 fw-bold mb-3">A melhor pizza artesanal da cidade</h1>
+          <p class="lead text-muted mb-4">Sabores exclusivos, ingredientes frescos e bordas irresistíveis. Peça agora e experimente a paixão em cada fatia.</p>
+          <div class="mb-4 p-3 rounded-4 bg-light border border-warning">
+            <h6 class="fw-bold mb-2">Horário de funcionamento</h6>
+            <p class="mb-1">Terça a quinta: 18hs às 23hs</p>
+            <p class="mb-0">Sexta a domingo: 18hs às 00hs</p>
+          </div>
+          <div class="d-flex flex-column flex-sm-row gap-3">
+            <a href="{% url 'cardaprincipal' %}" class="btn btn-gradient btn-lg">Ver Cardápio</a>
+            <a href="{% url 'carrinho' %}" class="btn btn-outline-secondary btn-lg">Ver Carrinho{% if cart_count %} ({{ cart_count }}){% endif %}</a>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="hero-image rounded-4 overflow-hidden shadow-lg">
+            <img src="{% static 'img/imgpizza.jpg' %}" class="img-fluid" alt="Pizza destaque" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container mb-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+      <div>
+        <h2 class="display-6 fw-bold">Promoções da semana</h2>
+        <p class="text-muted">Seis pizzas em destaque com preço especial para você aproveitar agora.</p>
+      </div>
+      <a href="{% url 'cardaprincipal' %}" class="btn btn-outline-secondary">Ver todo o cardápio</a>
+    </div>
+    <div class="row g-4">
+      {% for pizza in promotions %}
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card promo-card h-100 shadow-sm overflow-hidden border-0">
+              <img src="{% static pizza.image %}" class="card-img-top img-fluid" alt="{{ pizza.pizza }}" />
+              <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold">{{ pizza.pizza|upper }}</h5>
+              <p class="card-text text-muted mb-4">{{ pizza.desc|upper }}</p>
+              <div class="mt-auto">
+                <p class="mb-2 text-primary fw-semibold">R$ {{ pizza.vlvenda }}</p>
+                {% if pizza.id %}
+                  <form action="{% url 'add-to-cart' pizza.id %}" method="post" class="d-grid">
+                    {% csrf_token %}
+                    <input type="hidden" name="sabor_type" value="unique" />
+                    <button type="submit" class="btn btn-gradient btn-sm">Adicionar</button>
+                  </form>
+                {% else %}
+                  <a href="{% url 'cardaprincipal' %}" class="btn btn-outline-warning btn-sm">Ver no cardápio</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <div class="alert alert-warning text-center">Nenhuma promoção disponível no momento.</div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

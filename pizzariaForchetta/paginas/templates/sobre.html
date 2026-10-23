@@ -1,0 +1,53 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block linkshead %}
+  <title>Pizzaria Palestra - Sobre</title>
+{% endblock %}
+
+{% block conteudo %}
+  <section class="section-panel py-5">
+    <div class="container main-content">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-6">
+          <div class="glass-card p-5 shadow-lg rounded-4">
+            <span class="badge bg-warning text-dark mb-3">Nossa história</span>
+            <h1 class="display-6 fw-bold mb-3">Pizzaria feita com carinho e tradição</h1>
+            <p class="lead text-muted mb-4">Somos uma pizzaria familiar, apaixonada por criar pizzas artesanais com ingredientes selecionados e atendimento acolhedor.</p>
+            <p class="text-secondary mb-4">Cada receita é preparada com cuidado para oferecer sabor, qualidade e uma experiência que convida você a voltar sempre.</p>
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <div class="feature-box p-4 rounded-4 bg-white border">
+                  <h5>Missão</h5>
+                  <p class="small text-muted">Entregar pizzas saborosas e atendimento que faz você se sentir em casa.</p>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="feature-box p-4 rounded-4 bg-white border">
+                  <h5>Visão</h5>
+                  <p class="small text-muted">Ser a pizzaria mais querida da nossa região pelo sabor e pelo carinho.</p>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="feature-box p-4 rounded-4 bg-white border">
+                  <h5>Valores</h5>
+                  <ul class="mb-0 text-secondary">
+                    <li>• Qualidade com ingredientes frescos.</li>
+                    <li>• Atendimento acolhedor e dedicado.</li>
+                    <li>• Inovação no cardápio e nos sabores.</li>
+                    <li>• Respeito à comunidade e sustentabilidade.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="image-panel rounded-4 overflow-hidden shadow-lg">
+            <img src="{% static 'img/imgpizza.jpg' %}" class="img-fluid" alt="Nossa história" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

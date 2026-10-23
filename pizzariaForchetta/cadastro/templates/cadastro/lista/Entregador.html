@@ -1,0 +1,43 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Entregador</h1>
+    <br />
+
+    <hr />
+    <h2 class="text-center">Lista de Entregador ativos</h2>
+    <a href="{% url 'cadastrar-entregador' %}" class="btn btn-primary btn-sm">Adicionar Entregador</a>
+    <strong>
+      <p>
+        Se o endereço do Entregador não estiver na lista, <a href="{% url 'cadastrar-endereco' %}">clik aqui</a>
+      </p>
+    </strong>
+    <hr />
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Endereço</th>
+          <th>Opções</th>
+        </tr>
+        {% for entregador in object_list %}
+          <tr>
+            <td>{{ entregador.nomeEntreg }}</td>
+            <td>{{ entregador.telEntreg }}</td>
+            <td>{{ entregador.endEntreg }}</td>
+            <td>
+              <a href="{% url 'editar-entregador' entregador.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+              <a href="{% url 'excluir-entregador' entregador.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <th colspan="4">Nenhum entregador registrado!</th>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

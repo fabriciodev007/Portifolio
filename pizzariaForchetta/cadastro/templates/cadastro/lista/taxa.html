@@ -1,0 +1,39 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Taxa de entrega</h1>
+    <br />
+
+    <hr />
+    <h2 class="text-center">Lista de taxa</h2>
+    <a href="{% url 'cadastrar-taxa' %}" class="btn btn-primary btn-sm">Adicionar taxa de Entrega</a>
+    
+    <hr />
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>Taxa fixa</th>
+          <th>Endereço Cliente</th>
+          <th>Valor Total da Taxa</th>
+          <th>Opções</th>
+        </tr>
+        {% for taxa in object_list %}
+          <tr>
+            <td>{{ taxa.valorT }}</td>
+            <td>{{ taxa.edCliente }}</td>
+            <td>{{ taxa.valorTT }}</td>
+            <td>
+              <a href="{% url 'editar-taxa' taxa.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+              <a href="{% url 'excluir-taxa' taxa.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <th colspan="4">Nenhuma taxa registrada!</th>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

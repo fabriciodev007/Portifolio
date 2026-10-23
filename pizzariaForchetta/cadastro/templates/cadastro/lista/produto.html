@@ -1,0 +1,47 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Produtos</h1>
+    <br />
+    
+    <hr>
+    <h2 class="text-center">Lista de Produtos</h2>
+    <a href="{%url 'cadastrar-produto'%}" class="btn btn-primary btn-sm" >Adicionar novo Produto</a>
+    
+    <hr>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Fornec.</th>
+          <th>Opções</th>
+        </tr>
+        {% for produto in object_list%}
+        <tr>
+            <td>{{produto.pk}}</td>
+            <td>{{produto.nomeProd}}</td>
+            <td>{{produto.descProd}}</td>  
+            <td>{{produto.fornec}}</td>
+            <td>
+                <a href="{% url 'editar-produto' produto.pk%}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                <a href="{% url 'excluir-produto' produto.pk%}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+
+            </td>
+        </tr>
+
+
+        {% empty%}
+        <tr>
+            <th colspan="4">Nenhum produto registrada!</th>
+        </tr>
+
+        {% endfor %}
+
+
+      </table>
+    </div>
+  </div>
+{% endblock %}

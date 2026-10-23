@@ -1,0 +1,233 @@
+{% extends 'modelo.html' %}
+
+{% block linkshead %}
+  <title>Formas de Pagamento | Pizzaria Palestra</title>
+{% endblock %}
+
+{% block conteudo %}
+  <section class="section-panel py-5">
+    <div class="container main-content">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
+        <div>
+          <span class="badge bg-warning text-dark mb-2">Pagamento</span>
+          <h1 class="display-6">Formas de Pagamento</h1>
+          <p class="text-secondary">Escolha como deseja pagar seu pedido.</p>
+        </div>
+        <div>
+          <a class="btn btn-outline-primary" href="{% url 'carrinho' %}">Voltar ao carrinho</a>
+        </div>
+      </div>
+
+    {% if items %}
+      <h5 class="mb-3">Conferência do pedido</h5>
+      <div class="table-responsive rounded-4 overflow-hidden border border-1">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Preço</th>
+              <th>Quantidade</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+              <tr>
+                <td>
+                  {{ item.label }}
+                  {% if item.borda_label %}
+                    <br><small class="text-muted">Borda: {{ item.borda_label }}</small>
+                  {% endif %}
+                </td>
+                <td>R$ {{ item.price|floatformat:2 }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3 p-3 rounded-4 cart-total">
+        <strong>Subtotal:</strong>
+        <span id="order-subtotal" data-value="{{ subtotal|default:0 }}">R$ {{ subtotal|default:0|floatformat:2 }}</span>
+      </div>
+      <div id="delivery-fee-row" class="d-none d-flex justify-content-between align-items-center px-3 mt-2" data-delivery-fee="{{ delivery_fee|default:0 }}">
+        <span>Taxa de entrega:</span>
+        <span id="delivery-fee-value">R$ {{ delivery_fee|default:0|floatformat:2 }}</span>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-3 p-3 rounded-4 cart-total">
+        <strong>Total do pedido:</strong>
+        <span id="order-total" class="fs-4">R$ {{ total|default:0|floatformat:2 }}</span>
+      </div>
+
+      <div id="delivery-details" class="d-none">
+        <h5 class="mt-4 mb-3">Confirmar dados de entrega</h5>
+        {% if cliente %}
+          <div class="row g-3 mb-2">
+            <div class="col-md-6">
+              <div class="border rounded p-3 h-100 bg-light">
+                <h6 class="mb-2">Dados pessoais</h6>
+                <div><strong>Nome:</strong> {{ cliente.nome_cliente }}</div>
+                <div><strong>CPF:</strong> {{ cliente.cpf|default:'-' }}</div>
+                <div><strong>Telefone:</strong> {{ cliente.tel_clente }}</div>
+                <div><strong>E-mail:</strong> {{ user.email|default:'-' }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="border rounded p-3 h-100 bg-light">
+                <h6 class="mb-2">Endereco de entrega</h6>
+                {% if endereco_entrega %}
+                  <div><strong>Rua:</strong> {{ endereco_entrega.rua }}, {{ endereco_entrega.numero|default:'s/n' }}{% if endereco_entrega.complemento %} - {{ endereco_entrega.complemento }}{% endif %}</div>
+                  <div><strong>Bairro:</strong> {{ endereco_entrega.bairro }}</div>
+                  <div><strong>Cidade/UF:</strong> {{ endereco_entrega.cidade }} / {{ endereco_entrega.estado }}</div>
+                  <div><strong>CEP:</strong> {{ endereco_entrega.cep|default:'-' }}</div>
+                {% else %}
+                  <div class="text-muted">Endereço de entrega não cadastrado.</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {% if endereco_entrega %}
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+              <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#editAddressCollapse" aria-expanded="false">Corrigir endereço</button>
+            </div>
+            <div class="collapse mb-4" id="editAddressCollapse">
+              <div class="card card-body rounded-4 shadow-sm border-0">
+                <form method="post" action="{% url 'salvar-endereco' %}">
+                  {% csrf_token %}
+                  {% for field in delivery_form %}
+                    <div class="mb-3">
+                      {{ field.label_tag }}
+                      {{ field }}
+                      {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary">Salvar endereço</button>
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#editAddressCollapse">Cancelar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          {% else %}
+            <div class="mb-4">
+              <div class="card card-body rounded-4 shadow-sm border-0">
+                <form method="post" action="{% url 'salvar-endereco' %}">
+                  {% csrf_token %}
+                  {% for field in delivery_form %}
+                    <div class="mb-3">
+                      {{ field.label_tag }}
+                      {{ field }}
+                      {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                  <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary">Salvar endereço</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="alert alert-warning">
+            Nao encontramos seus dados de entrega. Volte ao carrinho para revisar seu cadastro antes de concluir.
+          </div>
+        {% endif %}
+      </div>
+
+      <div id="pickup-details" class="d-none">
+        <h5 class="mt-4 mb-3">Retirada na pizzaria</h5>
+        <div class="border rounded p-3 bg-light">
+          <h6 class="mb-2">Endereço da pizzaria</h6>
+          <div><strong>Rua:</strong> {{ pickup_address.rua }}, {{ pickup_address.numero }}</div>
+          <div><strong>Bairro:</strong> {{ pickup_address.bairro }}</div>
+          <div><strong>Cidade/UF:</strong> {{ pickup_address.cidade }} / {{ pickup_address.estado }}</div>
+          <div><strong>CEP:</strong> {{ pickup_address.cep }}</div>
+        </div>
+      </div>
+
+      {% if can_finalize_checkout %}
+        <h5 class="mb-3">Escolha a forma de pagamento</h5>
+        <form method="post" class="card border-0 shadow-sm p-3">
+          {% csrf_token %}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+          <div class="mb-3">
+            <label class="form-label">{{ form.delivery_option.label }}</label>
+            <div class="border rounded p-3 bg-light">
+              {{ form.delivery_option }}
+            </div>
+          </div>
+          <div class="mb-3">{{ form.payment_method }}</div>
+          <div class="d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-secondary" href="{% url 'carrinho' %}">Voltar</a>
+            <button type="submit" class="btn btn-success">Confirmar e finalizar pedido</button>
+          </div>
+        </form>
+      {% else %}
+        <div class="d-flex justify-content-end">
+          <a class="btn btn-outline-secondary" href="{% url 'carrinho' %}">Voltar ao carrinho</a>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="alert alert-info">Seu carrinho está vazio. Adicione produtos antes de prosseguir para o pagamento.</div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const deliveryOptionInputs = document.querySelectorAll('input[name="delivery_option"]');
+      const deliveryDetails = document.getElementById('delivery-details');
+      const pickupDetails = document.getElementById('pickup-details');
+
+      function formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(value);
+      }
+
+      function updateSummary() {
+        const selectedValue = document.querySelector('input[name="delivery_option"]:checked')?.value;
+        const feeRow = document.getElementById('delivery-fee-row');
+        const feeValueEl = document.getElementById('delivery-fee-value');
+        const totalEl = document.getElementById('order-total');
+        const subtotalEl = document.getElementById('order-subtotal');
+        const subtotal = parseFloat(subtotalEl?.dataset.value || '0');
+        const deliveryFee = parseFloat(feeRow?.dataset.deliveryFee || '0');
+        const effectiveFee = selectedValue === 'pickup' ? 0 : deliveryFee;
+
+        feeRow?.classList.toggle('d-none', selectedValue === 'pickup');
+        if (feeValueEl) {
+          feeValueEl.textContent = `R$ ${formatCurrency(effectiveFee)}`;
+        }
+        if (totalEl) {
+          totalEl.textContent = `R$ ${formatCurrency(subtotal + effectiveFee)}`;
+        }
+
+        if (selectedValue === 'pickup') {
+          deliveryDetails?.classList.add('d-none');
+          pickupDetails?.classList.remove('d-none');
+        } else {
+          pickupDetails?.classList.add('d-none');
+          deliveryDetails?.classList.remove('d-none');
+        }
+      }
+
+      deliveryOptionInputs.forEach(function (input) {
+        input.addEventListener('change', updateSummary);
+      });
+
+      updateSummary();
+    });
+  </script>
+{% endblock %}

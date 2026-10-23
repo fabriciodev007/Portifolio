@@ -1,0 +1,43 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Endereços</h1>
+    <br />
+    <hr>
+    <h2 class="text-center">Lista de endereços</h2>
+    <a href="{% url 'cadastrar-endereco' %}" class="btn btn-primary btn-sm">Adicionar endereço</a>
+    <hr>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>Rua</th>
+          <th>Número</th>
+          <th>CEP</th>
+          <th>Bairro</th>
+          <th>Cidade</th>
+          <th>Estado</th>
+          <th>Opções</th>
+        </tr>
+        {% for endereco in object_list %}
+        <tr>
+          <td>{{ endereco.rua }}</td>
+          <td>{{ endereco.numero }}</td>
+          <td>{{ endereco.cep }}</td>
+          <td>{{ endereco.bairro }}</td>
+          <td>{{ endereco.cidade }}</td>
+          <td>{{ endereco.estado }}</td>
+          <td>
+            <a href="{% url 'editar-endereco' endereco.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+            <a href="{% url 'excluir-endereco' endereco.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <th colspan="7">Nenhum endereço registrado!</th>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

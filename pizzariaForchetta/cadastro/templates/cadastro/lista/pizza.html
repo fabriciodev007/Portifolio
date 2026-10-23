@@ -1,0 +1,51 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Pizzas</h1>
+    <br />
+    
+    <hr>
+    <h2 class="text-center">Lista de Pizzas</h2>
+    <a href="{%url 'cadastrar-pizza'%}" class="btn btn-primary btn-sm" >Adicionar nova Pizza</a>
+    
+    <hr>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>Num</th>
+          <th>Pizza</th>
+          <th>Descrição</th>
+          <th>Vlr de custo</th>
+          <th>Valor 8pdç</th>
+          <th>Valor 12pdç</th>
+          <th>Opções</th>
+        </tr>
+        {% for pizza in object_list%}
+        <tr>
+            <td>{{pizza.pk}}</td>
+            <td>{{pizza.pizza}}</td>
+            <td>{{pizza.desc}}</td>
+            <td>{{pizza.vlbruto}}</td>
+            <td>{{pizza.vlvenda}}</td>
+            <td>{{pizza.vlvenda}}</td>
+            <td>
+                <a href="{% url 'editar-pizza' pizza.pk%}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                <a href="{% url 'excluir-pizza' pizza.pk%}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+
+            </td>
+        </tr>
+
+
+        {% empty%}
+        <tr>
+            <th colspan="4">Nenhum pizza registrada!</th>
+        </tr>
+
+        {% endfor %}
+
+
+      </table>
+    </div>
+  </div>
+{% endblock %}

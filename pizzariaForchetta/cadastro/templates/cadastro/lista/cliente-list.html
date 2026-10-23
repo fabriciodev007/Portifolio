@@ -1,0 +1,47 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Clientes</h1>
+    <br />
+    
+    <hr>
+    <h2 class="text-center">Lista de clientes</h2>
+    <a href="{%url 'cadastrar-cliente'%}" class="btn btn-primary btn-sm" >Adicionar cliente</a>
+    
+    <hr>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Telefone</th>
+          <th>Endereço</th>
+          <th>Opções</th>
+        </tr>
+        {% for cliente in object_list%}
+        <tr>
+            <td>{{cliente.nome_cliente}}</td>
+            <td>{{cliente.cpf|default:'-'}}</td>
+            <td>{{cliente.tel_clente}}</td>
+            <td>{{cliente.end_cliente}}</td>
+            <td>
+                <a href="{% url 'editar-cliente' cliente.pk%}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+                <a href="{% url 'excluir-cliente' cliente.pk%}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+
+            </td>
+        </tr>
+
+
+        {% empty%}
+        <tr>
+          <th colspan="5">Nenhum cliente registrado!</th>
+        </tr>
+
+        {% endfor %}
+
+
+      </table>
+    </div>
+  </div>
+{% endblock %}

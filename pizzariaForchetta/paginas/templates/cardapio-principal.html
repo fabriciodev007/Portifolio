@@ -1,0 +1,133 @@
+{% extends 'modelo.html' %}
+
+{% block linkshead %}
+  <title>Cardápio de Pizzas</title>
+{% endblock %}
+
+{% block conteudo %}
+  <div class="container py-4 menu-section">
+    <div class="menu-hero rounded-4 p-4 mb-4 shadow-sm">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <div>
+          <span class="badge bg-warning text-dark mb-2">Cardápio exclusivo</span>
+          <h1 class="display-5 fw-bold mb-2">Descubra seu sabor perfeito</h1>
+          <p class="lead text-muted mb-0">Explore nossas pizzas artesanais com bordas especiais, combinações clássicas e novas sugestões para todos os gostos.</p>
+        </div>
+        <a class="btn btn-gradient btn-lg px-4" href="{% url 'carrinho' %}">
+          🛒 Carrinho {% if cart_count %}({{ cart_count }}){% endif %}
+        </a>
+      </div>
+    </div>
+
+    {% if half_message %}
+      <div class="alert alert-info">{{ half_message }}</div>
+    {% endif %}
+    {% if half_pending %}
+      <div class="alert alert-warning">
+        Meio a meio em andamento: metade escolhida "{{ half_pending.name }}".
+        Borda: {{ half_pending.borda_label|default:'Sem borda' }}.
+        Selecione outra pizza para completar o pedido.
+      </div>
+    {% endif %}
+    <div class="row g-4">
+      {% for pizza in pizzas %}
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="card pizza-card h-100 shadow-sm border-0 overflow-hidden">
+            <div class="card-body d-flex flex-column px-4 py-4">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title fw-bold mb-0">{{ pizza.pizza|upper }}</h5>
+                {% if half_pending and pizza.id == half_pending.pizza_id %}
+                  <span class="badge bg-warning text-dark">Meio a meio</span>
+                {% endif %}
+              </div>
+              <p class="card-text text-muted mb-4">{{ pizza.desc|upper }}</p>
+
+              <div class="mb-3 pizza-options">
+                <div class="form-check mb-2">
+                  <input class="form-check-input" type="radio" name="sabor_type_{{ pizza.id }}" id="unico{{ pizza.id }}" value="unique" {% if not half_pending or pizza.id != half_pending.pizza_id %}checked{% endif %}>
+                  <label class="form-check-label" for="unico{{ pizza.id }}">Sabor único</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="sabor_type_{{ pizza.id }}" id="meio{{ pizza.id }}" value="half" {% if half_pending and pizza.id == half_pending.pizza_id %}checked{% endif %} onclick="return onHalfRadioClick(this, {{ half_pending|yesno:'true,false' }}, {{ pizza.id }}, {{ half_pending.pizza_id|default:'null' }})">
+                  <label class="form-check-label" for="meio{{ pizza.id }}">Meio a meio</label>
+                </div>
+              </div>
+              <form action="{% url 'add-to-cart' pizza.id %}" method="post" class="add-pizza-form mt-auto" onsubmit="return confirmPizzaSelection(this, {{ half_pending|yesno:'true,false' }})">
+                {% csrf_token %}
+                <input type="hidden" name="sabor_type" value="unique" class="sabor_type_input" />
+                <div class="mb-3">
+                  <label for="borda{{ pizza.id }}" class="form-label mb-1">Borda</label>
+                  <select class="form-select form-select-sm" id="borda{{ pizza.id }}" name="borda">
+                    {% for option in borda_options %}
+                      <option value="{{ option.value }}">
+                        {{ option.label }}{% if option.price != '0.00' %} (+R$ {{ option.price }}){% endif %}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-gradient btn-lg btn-block">🛒 Adicionar</button>
+              </form>
+              <div class="pizza-pricing mt-4 pt-3 border-top">
+                <p class="mb-1 text-muted small">Preços</p>
+                <div class="d-flex justify-content-between gap-3">
+                  <span class="pizza-price">8 fatias</span>
+                  <strong>R$ {{ pizza.vlvenda }}</strong>
+                </div>
+                <div class="d-flex justify-content-between gap-3">
+                  <span class="pizza-price">12 fatias</span>
+                  <strong>R$ {{ pizza.vlr12pdc }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <div class="alert alert-warning">Nenhuma pizza disponível no momento.</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    function onHalfRadioClick(radio, halfPending, pizzaId, pendingPizzaId) {
+      if (!halfPending || (pendingPizzaId && pizzaId === pendingPizzaId)) {
+        return true;
+      }
+      const form = radio.closest('form');
+      const hiddenInput = form.querySelector('.sabor_type_input');
+      if (hiddenInput) {
+        hiddenInput.value = 'half';
+      }
+      form.submit();
+      return false;
+    }
+
+    function confirmPizzaSelection(form, halfPending) {
+      const actionMatch = form.action.match(/\/adicionar\/(\d+)\//);
+      const pizzaId = actionMatch ? actionMatch[1] : null;
+      if (!pizzaId) {
+        return true;
+      }
+      const radios = document.getElementsByName('sabor_type_' + pizzaId);
+      let selected = 'unique';
+      for (const radio of radios) {
+        if (radio.checked) {
+          selected = radio.value;
+          break;
+        }
+      }
+      const hiddenInput = form.querySelector('.sabor_type_input');
+      if (hiddenInput) {
+        hiddenInput.value = selected;
+      }
+      if (selected === 'half' && !halfPending) {
+        alert('Meio a meio selecionado. Por favor escolha outro produto para completar a outra metade.');
+      }
+      if (selected === 'unique') {
+        alert('Sabor único selecionado. A pizza será adicionada ao carrinho.');
+      }
+      return true;
+    }
+  </script>
+{% endblock %}

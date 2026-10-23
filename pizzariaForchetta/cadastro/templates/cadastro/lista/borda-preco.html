@@ -1,0 +1,40 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Bordas</h1>
+    <p class="text-center text-muted">Cadastre novos tipos de borda e seus preços.</p>
+    <br />
+
+    <hr>
+    <a href="{% url 'cadastrar-borda-preco' %}" class="btn btn-primary btn-sm">Adicionar nova borda</a>
+
+    <hr>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>Num</th>
+          <th>Borda</th>
+          <th>Preco</th>
+          <th>Opcoes</th>
+        </tr>
+
+        {% for item in object_list %}
+          <tr>
+            <td>{{ item.pk }}</td>
+            <td>{{ item.borda }}</td>
+            <td>R$ {{ item.preco|floatformat:2 }}</td>
+            <td>
+              <a href="{% url 'editar-borda-preco' item.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+              <a href="{% url 'excluir-borda-preco' item.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <th colspan="4">Nenhuma configuracao cadastrada.</th>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

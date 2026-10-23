@@ -1,0 +1,20 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="w-100" style="max-width: 720px;">
+      <div class="card shadow-sm p-4">
+        <h1 class="text-center mb-3">Excluir Registros</h1>
+        <h2 class="text-center mb-4">Os registros selecionados serão excluídos</h2>
+        <hr />
+        <form action="" method="post">
+          <p class="text-center mb-4">Deseja excluir o registro: <strong>{{ object }}</strong>?</p>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="text-center mt-4">
+            <button class="btn btn-danger px-5" type="submit">Excluir</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

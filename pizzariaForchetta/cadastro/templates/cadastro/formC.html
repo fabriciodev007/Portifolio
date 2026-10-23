@@ -1,0 +1,26 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="w-100" style="max-width: 720px;">
+      <div class="card shadow-sm p-4">
+        <h1 class="text-center mb-3">Cadastros</h1>
+        <h2 class="text-center mb-4">Cadastre o endereço e o cliente</h2>
+        <hr />
+        <p class="text-center mb-4">
+          Se o endereço do cliente não estiver na lista,
+          <a href="{% url 'cadastrar-endereco' %}">clique aqui</a>.
+        </p>
+        <form action="" method="post">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          {{ form.as_p }}
+          <div class="text-center mt-4 d-flex justify-content-center gap-2 flex-wrap">
+            <button class="btn btn-primary px-5" type="submit">Cadastrar</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back()">Voltar para página anterior</button>
+            <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">Voltar para tela inicial</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

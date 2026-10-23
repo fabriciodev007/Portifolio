@@ -1,0 +1,134 @@
+{% extends 'modelo.html' %}
+
+{% block linkshead %}
+  <title>Confirmação do Pedido | Pizzaria Palestra</title>
+{% endblock %}
+
+{% block conteudo %}
+  <section class="section-panel py-5">
+    <div class="container main-content">
+      {% if items %}
+      <div class="order-status-card mb-4 p-4 rounded-4 shadow-sm">
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+          <div>
+            <p class="text-uppercase text-primary fw-bold mb-2">Status do pedido</p>
+            <h4 class="mb-2">Pedido enviado para o atendimento</h4>
+            <p class="mb-0 text-muted">Nossa equipe vai confirmar o pedido e preparar a entrega em breve.</p>
+          </div>
+          <div class="order-status-info text-center">
+            <span class="d-block text-muted mb-1">Tempo estimado</span>
+            <strong class="fs-3">30–45 min</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        {% if show_delivery_info %}
+          {% if cliente and endereco_entrega %}
+            <div class="col-lg-6">
+              <div class="card confirmation-card shadow-sm h-100 border-0">
+                <div class="card-body">
+                  <h5 class="card-title mb-4">Dados do cliente</h5>
+                  <p class="mb-2"><strong>Nome:</strong> {{ cliente.nome_cliente }}</p>
+                  <p class="mb-2"><strong>CPF:</strong> {{ cliente.cpf|default:'-' }}</p>
+                  <p class="mb-2"><strong>Telefone:</strong> {{ cliente.tel_clente }}</p>
+                  <p class="mb-0"><strong>E-mail:</strong> {{ user.email|default:'-' }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card confirmation-card shadow-sm h-100 border-0">
+                <div class="card-body">
+                  <h5 class="card-title mb-4">Endereço de entrega</h5>
+                  <p class="mb-2"><strong>Rua:</strong> {{ endereco_entrega.rua }}, {{ endereco_entrega.numero|default:'s/n' }}{% if endereco_entrega.complemento %} - {{ endereco_entrega.complemento }}{% endif %}</p>
+                  <p class="mb-2"><strong>Bairro:</strong> {{ endereco_entrega.bairro }}</p>
+                  <p class="mb-2"><strong>Cidade/UF:</strong> {{ endereco_entrega.cidade }} / {{ endereco_entrega.estado }}</p>
+                  <p class="mb-0"><strong>CEP:</strong> {{ endereco_entrega.cep|default:'-' }}</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="col-12">
+            <div class="card confirmation-card shadow-sm border-0">
+              <div class="card-body">
+                <h5 class="card-title mb-4">Retirada na pizzaria</h5>
+                <p class="mb-2"><strong>Rua:</strong> {{ pickup_address.rua }}, {{ pickup_address.numero }}</p>
+                <p class="mb-2"><strong>Bairro:</strong> {{ pickup_address.bairro }}</p>
+                <p class="mb-2"><strong>Cidade/UF:</strong> {{ pickup_address.cidade }} / {{ pickup_address.estado }}</p>
+                <p class="mb-0"><strong>CEP:</strong> {{ pickup_address.cep }}</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="col-12">
+          <div class="card confirmation-card shadow-sm border-0">
+            <div class="card-body">
+              <h5 class="card-title mb-4">Resumo do pedido</h5>
+              <div class="table-responsive">
+                <table class="table table-borderless align-middle order-summary-table mb-0">
+                  <thead>
+                    <tr>
+                      <th>Produto</th>
+                      <th class="text-end">Preço</th>
+                      <th class="text-center">Quantidade</th>
+                      <th class="text-end">Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in items %}
+                      <tr>
+                        <td>
+                          <strong>{{ item.label }}</strong>
+                          {% if item.borda_label %}
+                            <div class="text-muted small">Borda: {{ item.borda_label }}</div>
+                          {% endif %}
+                          {% if item.borda_price %}
+                            <div class="text-muted small">Adicional: R$ {{ item.borda_price|floatformat:2 }}</div>
+                          {% endif %}
+                        </td>
+                        <td class="text-end">R$ {{ item.price|floatformat:2 }}</td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                        <td class="text-end">R$ {{ item.subtotal|floatformat:2 }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 mt-4 pt-3 border-top">
+                <div>
+                  <p class="mb-1 text-muted">Forma de pagamento</p>
+                  <span class="badge payment-method-badge payment-method-{{ payment_method_code|default:'none' }}">
+                    {% if payment_method_code == 'cartao' %}💳{% elif payment_method_code == 'pix' %}⚡{% elif payment_method_code == 'dinheiro' %}💵{% else %}🧾{% endif %}
+                    {{ payment_method }}
+                  </span>
+                </div>
+                <div class="text-end">
+                  <p class="mb-1 text-muted">Taxa de entrega</p>
+                  <span class="fw-semibold">R$ {{ delivery_fee|floatformat:2 }}</span>
+                  <p class="mb-1 mt-3 text-muted">Total do pedido</p>
+                  <span class="fs-4 fw-semibold text-primary">R$ {{ total|floatformat:2 }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-success rounded-4 py-4 px-4 shadow-sm">
+        <h4 class="alert-heading">Pedido confirmado com sucesso!</h4>
+        <p class="mb-0">Obrigado pela preferência. Seu pedido foi registrado e está em processo de finalização.</p>
+      </div>
+    {% endif %}
+
+    <div class="mt-5 d-flex flex-column flex-md-row gap-3 justify-content-center">
+      {% if whatsapp_url %}
+        <a class="btn btn-lg btn-success px-4" target="_blank" rel="noopener noreferrer" href="{{ whatsapp_url }}">Enviar pedido</a>
+      {% endif %}
+      <a class="btn btn-lg btn-primary px-4" href="{% url 'cardaprincipal' %}">Voltar ao cardápio</a>
+      <a class="btn btn-lg btn-outline-secondary px-4" href="{% url 'inicio' %}">Voltar para a página inicial</a>
+    </div>
+    </div>
+  </section>
+{% endblock %}

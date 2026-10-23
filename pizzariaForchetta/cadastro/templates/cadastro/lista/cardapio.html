@@ -1,0 +1,44 @@
+{% extends 'modelo.html' %}
+{% block conteudo %}
+  <div class="container">
+    <h1 class="text-center">Cardápio</h1>
+    <br />
+
+    <hr>
+    <h2 class="text-center">Tabela do Cardápio</h2>
+    <a href="{% url 'cadastrar-cardapio' %}" class="btn btn-primary btn-sm">Adicionar item ao cardápio</a>
+
+    <hr>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tr>
+          <th>Num</th>
+          <th>Pizza</th>
+          <th>Produto</th>
+          <th>Preço</th>
+          <th>Preco</th>
+          <th>Opções</th>
+        </tr>
+
+        {% for item in object_list %}
+          <tr>
+            <td>{{ item.pk }}</td>
+            <td>{{ item.pizz }}</td>
+            <td>{{ item.prod }}</td>
+            <td>R$ {{ item.preco|floatformat:2 }}</td>
+            <td>R$ {{ item.preco|floatformat:2 }}</td>
+            <td>
+              <a href="{% url 'editar-cardapio' item.pk %}" class="btn btn-warning btn-sm" title="Editar">Editar</a>
+              <a href="{% url 'excluir-cardapio' item.pk %}" class="btn btn-danger btn-sm" title="Excluir">Excluir</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <th colspan="7">Nenhum item no cardápio cadastrado!</th>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+{% endblock %}

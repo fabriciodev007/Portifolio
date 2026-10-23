@@ -1,0 +1,81 @@
+{% extends 'modelo.html' %}
+{% load static %}
+{% block estilo %}
+  <link rel="stylesheet" href="{% static 'css/estilo.css' %}" />
+{% endblock %}
+{% block linkshead %}
+  <title>Contato | Pizzaria Palestra</title>
+{% endblock %}
+
+{% block conteudo %}
+  <section class="section-panel py-5">
+    <div class="container main-content">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-6">
+          <div class="glass-card p-5 shadow-lg rounded-4">
+            <span class="badge bg-warning text-dark mb-3">Estamos à disposição</span>
+            <h1 class="display-6 fw-bold mb-3">Fale com nossa equipe</h1>
+            <p class="lead text-muted mb-4">Dúvidas, pedidos especiais ou sugestões? Envie uma mensagem e responderemos rapidamente.</p>
+            {% if contact_sent %}
+              <div class="alert alert-success">Mensagem enviada com sucesso! Em breve entraremos em contato.</div>
+            {% endif %}
+            <div class="row g-3 mt-4">
+              <div class="col-12 col-md-6">
+                <div class="contact-card p-4 rounded-4">
+                  <h5 class="mb-2">Telefone</h5>
+                  <p class="mb-0">(11) 99999-9999</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="contact-card p-4 rounded-4">
+                  <h5 class="mb-2">WhatsApp</h5>
+                  <p class="mb-0">(11) 98888-8888</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="contact-card p-4 rounded-4">
+                  <h5 class="mb-2">E-mail</h5>
+                  <p class="mb-0">fabricio.tree@gmail.com</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="contact-card p-4 rounded-4">
+                  <h5 class="mb-2">Endereço</h5>
+                  <p class="mb-0">Rua das Pizzas, 123 - Centro, São Paulo - SP</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="glass-card p-5 shadow-lg rounded-4">
+            <h2 class="h4 fw-bold mb-4">Envie sua mensagem</h2>
+            <form method="post" class="row g-3">
+              {% csrf_token %}
+              <div class="col-12">
+                <label for="id_nome" class="form-label">Nome</label>
+                {{ form.nome }}
+              </div>
+              <div class="col-12">
+                <label for="id_email" class="form-label">E-mail</label>
+                {{ form.email }}
+              </div>
+              <div class="col-12">
+                <label for="id_telefone" class="form-label">Telefone</label>
+                {{ form.telefone }}
+              </div>
+              <div class="col-12">
+                <label for="id_mensagem" class="form-label">Mensagem</label>
+                {{ form.mensagem }}
+              </div>
+              <div class="col-12 text-end">
+                <button type="submit" class="btn btn-gradient">Enviar mensagem</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

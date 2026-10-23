@@ -1,0 +1,272 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+
+    {% block estilo %}
+      <link rel="stylesheet" href="{% static 'css/estilo.css' %}" />
+    {% endblock %}
+
+    {% block linkshead %}
+      <title>Modelo</title>
+    {% endblock %}
+  </head>
+
+  <body>
+    {% block inicio %}
+      <header>
+        <div class="bg-dark">
+          <img src="{% static 'img/imgTemplate.png' %}" alt="" class="img img-fluid" />
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top site-navbar">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{% url 'inicio' %}">Pizzaria Forchetta D'oro</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'inicio' %}">Início</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'sobre' %}">Sobre</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Cardápio</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li>
+                        <a class="dropdown-item" href="{% url 'cardaprincipal' %}">Pizzas</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="{% url 'bebidas' %}">Bebidas</a>
+                      </li>
+                      <li>
+                        <hr class="dropdown-divider" />
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="{% url 'inicio' %}">Promoções</a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contato' %}">Contato</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'carrinho' %}">Carrinho{% if cart_count %} ({{ cart_count }}){% endif %}</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    {% if user.is_authenticated %}
+                      <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Perfil">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                          <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM4.285 12.433A5.978 5.978 0 0 1 8 11c1.433 0 2.75.5 3.715 1.433A5.978 5.978 0 0 1 8 14a5.978 5.978 0 0 1-3.715-1.567z"/>
+                        </svg>
+                        <span>{% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}</span>
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{% url 'password_change' %}">Alterar senha</a></li>
+                        <li>
+                          <form action="{% url 'logout' %}" method="post" class="px-3 py-1 mb-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link dropdown-item p-0">Sair</button>
+                          </form>
+                        </li>
+                      </ul>
+                    {% else %}
+                      <a class="nav-link d-flex align-items-center gap-1" href="{% url 'login' %}" title="Entrar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                          <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM4.285 12.433A5.978 5.978 0 0 1 8 11c1.433 0 2.75.5 3.715 1.433A5.978 5.978 0 0 1 8 14a5.978 5.978 0 0 1-3.715-1.567z"/>
+                        </svg>
+                        <span>Entrar</span>
+                      </a>
+                    {% endif %}
+                  </li>
+                  
+                </ul>
+                <form class="d-flex position-relative" action="{% url 'buscar' %}" method="get" id="searchForm">
+                  <input class="form-control me-2" id="searchInput" type="search" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Buscar pizzas, bebidas e páginas" aria-label="Buscar pizzas, bebidas e páginas" autocomplete="off" />
+                  <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+                  <ul id="searchSuggestions" class="list-group position-absolute top-100 start-0 mt-2 shadow-lg border-0 rounded-3 overflow-hidden d-none" style="z-index: 1050; min-width: 300px; max-width: 360px;"></ul>
+                </form>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+    {% endblock %}
+
+    <main class="main-content py-5">
+      {% if messages %}
+        <div class="container mb-4">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block conteudo %}
+        <div class="page-intro text-center py-5">
+          <h2 class="display-6">titulo</h2>
+          <p class="text-muted lead">subtitulo</p>
+        </div>
+      {% endblock %}
+    </main>
+
+    {% block rodape %}
+      <footer class="bg-dark text-center">
+        <nav class="navbar navbar-dark bg-dark justify-content-center footer-nav">
+          <div class="container-fluid justify-content-center">
+            <a class="navbar-brand text-light mx-auto" href="{% url 'inicio' %}">Pizzaria Forchetta D'oro</a>
+
+            <div class="container">
+              <ul class="d-sm-flex justify-content-center flex-wrap gap-3 mb-0">
+                <li class="nav-item">
+                  <a class="nav-link active text-light" aria-current="page" href="{% url 'inicio' %}">Início</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-light" href="{% url 'sobre' %}">Sobre</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Cardápio</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                      <a class="dropdown-item" href="{% url 'cardaprincipal' %}">Pizzas</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'bebidas' %}">Bebidas</a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'inicio'%}">Promoções</a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-light" href="{% url 'contato' %}">Contato</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Area restrita</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                      <a class="dropdown-item" href="{% url 'listar-cliente' %}">Clientes</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'listar-funcionario' %}">Cadastro Funcionário</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'listar-entregador' %}">Entregador</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'listar-pizza' %}">Atualizar cardápio</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'listar-borda-preco' %}">Configurar bordas</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'cadastrar-fornecedor' %}">Cadastrar Fornecedor</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'listar-produto' %}">Inserir produtos</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'listar-taxa' %}">Taxa de Entrega</a>
+                    </li>
+                  </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link text-light" href="{% url 'login' %}">Área restrita</a>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <div class="container text-light text-center">
+          <h4>Redes sociais</h4>
+          <div class="footer-social">
+            <a class="text-light text-decoration-none footer-social-icon footer-social-facebook" href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 5 3.66 9.13 8.44 9.88v-6.99H7.9v-2.9h2.54V9.84c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34v6.99C18.34 21.13 22 17 22 12z"/>
+              </svg>
+            </a>
+            <a class="text-light text-decoration-none footer-social-icon footer-social-instagram" href="https://www.instagram.com/pizzariaforchettadouro/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.75-.88a1.12 1.12 0 1 1 0 2.25 1.12 1.12 0 0 1 0-2.25z"/>
+              </svg>
+            </a>
+            <a class="text-light text-decoration-none footer-social-icon footer-social-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.1-.472-.149-.671.149-.198.297-.768.966-.942 1.164-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.173.198-.298.298-.497.099-.198.05-.372-.025-.521-.074-.149-.67-1.611-.916-2.206-.242-.579-.487-.5-.671-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.693.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.124-.273-.198-.57-.347zM12 2C6.486 2 2 6.486 2 12c0 2.132.703 4.104 1.896 5.716L2 22l4.47-1.865A9.954 9.954 0 0 0 12 22c5.514 0 10-4.486 10-10S17.514 2 12 2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <p class="text-center text-light">
+          Site Desenvolvido por<Strong> Fabricio Dias</Strong>
+        </p>
+      </footer>
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('searchSuggestions');
+        if (!input || !suggestionsBox) return;
+
+        let debounceTimer;
+        function renderSuggestions(items) {
+          if (!items.length) {
+            suggestionsBox.classList.add('d-none');
+            suggestionsBox.innerHTML = '';
+            return;
+          }
+
+          suggestionsBox.innerHTML = items.map((item) => `
+            <li class="list-group-item list-group-item-action p-2 px-3 border-0">
+              <a class="text-decoration-none d-flex align-items-center justify-content-between gap-2 text-dark" href="${item.url}">
+                <span class="fw-semibold">${item.label}</span>
+                <span class="badge rounded-pill bg-light text-muted">Ir</span>
+              </a>
+            </li>
+          `).join('');
+          suggestionsBox.classList.remove('d-none');
+        }
+
+        input.addEventListener('input', function () {
+          const query = input.value.trim();
+          clearTimeout(debounceTimer);
+          if (!query) {
+            suggestionsBox.classList.add('d-none');
+            suggestionsBox.innerHTML = '';
+            return;
+          }
+
+          debounceTimer = setTimeout(() => {
+            fetch(`{% url 'buscar-sugestoes' %}?q=${encodeURIComponent(query)}`)
+              .then((response) => response.json())
+              .then((data) => renderSuggestions(data))
+              .catch(() => renderSuggestions([]));
+          }, 180);
+        });
+
+        document.addEventListener('click', function (event) {
+          if (!suggestionsBox.contains(event.target) && event.target !== input) {
+            suggestionsBox.classList.add('d-none');
+          }
+        });
+      });
+    </script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>
