@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f8f5">
+    <meta name="description" content="Apostilas digitais práticas para estudar no seu ritmo e transformar seus próximos passos.">
+    <title>Estudaí — Apostilas para ir mais longe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="java.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="#" aria-label="Estudaí - início">
+                <span class="brand-mark" aria-hidden="true">e.</span>
+                <span>estudaí<span class="brand-period">.</span></span>
+            </a>
+            <nav class="main-nav" aria-label="Navegação principal">
+                <a href="#apostilas">Apostilas</a>
+                <a href="#beneficios">Como funciona</a>
+                <a href="#depoimentos">Quem estuda</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-inner">
+                <div class="hero-copy">
+                    <span class="eyebrow"><span class="eyebrow-dot"></span> SEU PRÓXIMO CAPÍTULO COMEÇA AQUI</span>
+                    <h1>Aprender hoje.<br><span>Ir mais longe amanhã.</span></h1>
+                    <p>Apostilas digitais feitas para aprender de verdade — no seu ritmo, do seu jeito e de onde você estiver.</p>
+                    <a class="button button-primary" href="#apostilas">Encontrar minha apostila <span aria-hidden="true">↗</span></a>
+                    <div class="hero-proof">
+                        <div class="avatar-stack" aria-hidden="true"><span>J</span><span>M</span><span>A</span><span>+</span></div>
+                        <div><strong>+ de 2.400 alunos</strong><small>estudando com a gente</small></div>
+                    </div>
+                </div>
+                <div class="hero-art" aria-label="Apostilas digitais e materiais de estudo">
+                    <div class="hero-orbit orbit-one"></div>
+                    <div class="hero-orbit orbit-two"></div>
+                    <div class="floating-note note-top"><span>✦</span> No seu tempo</div>
+                    <div class="book book-back"><span class="book-kicker">ESTUDAÍ · GUIA PRÁTICO</span><span class="book-shape shape-back"></span></div>
+                    <div class="book book-front"><span class="book-kicker">ESTUDAÍ · APOSTILA</span><span class="book-title">Comece<br>a criar.</span><span class="book-art-shape"></span><span class="book-bottom">DESIGN & CRIATIVIDADE</span></div>
+                    <div class="floating-note note-bottom"><span>↓</span> PDF para baixar</div>
+                    <div class="sparkle sparkle-one">✳</div><div class="sparkle sparkle-two">✦</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="trust-strip" id="beneficios">
+            <div class="container trust-inner">
+                <div><span class="trust-icon">↗</span><span><strong>Aprenda no seu ritmo</strong><small>Acesso sem prazo para acabar</small></span></div>
+                <div><span class="trust-icon">↓</span><span><strong>Material digital</strong><small>Estude no celular ou computador</small></span></div>
+                <div><span class="trust-icon">♡</span><span><strong>Feito por quem ensina</strong><small>Conteúdo prático e direto ao ponto</small></span></div>
+            </div>
+        </section>
+
+        <section class="catalog section-space" id="apostilas">
+            <div class="container">
+                <div class="section-heading">
+                    <div><span class="eyebrow">CONHECIMENTO QUE ABRE CAMINHOS</span><h2>Encontre seu próximo <span>passo.</span></h2></div>
+                    <a class="text-link" href="#catalog-grid">Ver todas as apostilas <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="catalog-tools">
+                    <div class="category-list" id="category-list" aria-label="Filtrar por categoria"></div>
+                    <label class="search-box">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+                        <input id="search-input" type="search" placeholder="Buscar apostilas..." aria-label="Buscar apostilas">
+                    </label>
+                </div>
+                <div class="catalog-meta"><span id="results-count"></span><span class="digital-label"><span></span> 100% digital</span></div>
+                <div class="product-grid" id="catalog-grid"></div>
+                <p class="empty-state" id="empty-state" hidden>Nenhuma apostila encontrada. Tente outro termo ou categoria.</p>
+            </div>
+        </section>
+
+        <section class="testimonial-section" id="depoimentos">
+            <div class="container testimonial-inner">
+                <div class="testimonial-mark">“</div>
+                <blockquote>Eu finalmente consegui estudar sem me sentir perdida. O conteúdo é direto, bonito e dá vontade de continuar.</blockquote>
+                <div class="testimonial-person"><span class="person-avatar">C</span><span><strong>Camila Nascimento</strong><small>Aluna de Design para Iniciantes</small></span></div>
+                <div class="testimonial-rating" aria-label="5 de 5 estrelas">★★★★★ <span>4,9/5 de quem estuda com a gente</span></div>
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <div class="container newsletter-inner">
+                <div><span class="eyebrow">UMA DOSE DE IDEIAS</span><h2>Aprendizado bom é aprendizado compartilhado.</h2><p>Receba novidades e materiais gratuitos direto no seu e-mail.</p></div>
+                <form class="newsletter-form" id="newsletter-form">
+                    <label class="visually-hidden" for="newsletter-email">Seu e-mail</label>
+                    <input id="newsletter-email" type="email" placeholder="Seu melhor e-mail" required>
+                    <button class="button button-primary" type="submit">Quero receber <span aria-hidden="true">→</span></button>
+                    <small id="newsletter-message">Sem spam. Só conteúdo que vale a pena.</small>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <a class="brand footer-brand" href="#"><span class="brand-mark" aria-hidden="true">e.</span><span>estudaí<span class="brand-period">.</span></span></a>
+            <p>Pequenos passos, grandes possibilidades.</p>
+            <span>© <span id="current-year"></span> Estudaí. Feito para aprender.</span>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
